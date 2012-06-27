@@ -7,7 +7,7 @@ VK
 
 > Использование
 1. Подключите класс
-    require(VK.php);
+    require('VK.php');
 2. Создайте объект VK
     2.1. без авторизации
         $vk = new VK('{APP_ID}', '{API_SECRET}');
@@ -17,7 +17,7 @@ VK
     3.1.1. Получаем ссылку авторизации
         $vk->getAuthorizeURL('{API_SETTINGS}', '{CALLBACK_URL}');
     3.1.2. Получаем токен доступа по ключу из ссылки авторизации
-        $vk->getAccessToken({CODE});
+        $vk->getAccessToken('{CODE}');
 4. Используем API
     $vk->api('{METHOD_NAME}', '{PARAMETERS}');
     
@@ -40,7 +40,7 @@ You can ask me any questions by e-mail: vladkens@yandex.ru
 
 > Use
 1. Connect class
-    require(VK.php);
+    require('VK.php');
 2. Create VK object
     2.1. without authorization
         $vk = new VK('{APP_ID}', '{API_SECRET}');
@@ -50,7 +50,7 @@ You can ask me any questions by e-mail: vladkens@yandex.ru
     3.1.1. Get authoriz link
         $vk->getAuthorizeURL('{API_SETTINGS}', '{CALLBACK_URL}');
     3.1.2. Get the token access by code from the authoriz link
-        $vk->getAccessToken({CODE});
+        $vk->getAccessToken('{CODE}');
 4. Usage API
     $vk->api('{METHOD_NAME}', '{PARAMETERS}');
     

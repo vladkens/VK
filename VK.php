@@ -40,7 +40,9 @@ class VK
     public function getAPI_URL()         { return 'http://api.vk.com/api.php'; }
     
     /**
-     * Construct VK object.
+     * @param string $app_id
+     * @param string $api_secret
+     * @param string $access_token
      */
     public function __construct($app_id, $api_secret, $access_token = null) {
         $this->app_id       = $app_id;
@@ -61,10 +63,7 @@ class VK
      * @return bool true is auth, false is not auth
      */
     public function is_auth() {
-        if (!is_null($this->access_token) && $this->auth) {
-            return true;
-        }
-        else return false;
+        return $this->auth;
     }
     
     /**
@@ -101,6 +100,8 @@ class VK
     
     /**
      * Get authorize URL.
+     * @param string $api_settings Access rights requested by your app (through comma).
+     * @param string $callback_url 
      * @return string
      */
     public function getAuthorizeURL($api_settings = '', $callback_url = 'http://oauth.vk.com/blank.html') {
@@ -117,6 +118,7 @@ class VK
     
     /**
      * Get the access token.
+     * @param string $code The code to get access token.
      * @return array(
      *      'access_token'  => 'the-access-token',
      *      'expires_in'    => '86399', // time life token in seconds
@@ -150,6 +152,9 @@ class VK
     
     /**
      * Make HTTP request.
+     * @param string $url
+     * @param string @method Get or Post
+     * @param array $postfields If $method post
      * @return array API return
      */
     private function http($url, $method = 'GET', $postfields = null) {
@@ -180,14 +185,16 @@ class VK
     
     /**
      * Create URL from the sended parameters.
+     * @param array $parameters Add to base url
+     * @param string $url Base url 
      * @return string 
      */
     private function createURL($parameters, $url) {
-        $pice = array();
-		foreach ($parameters as $key => $value)
-			$pice[] = $key . '=' . urlencode($value);
+        $piece = array();
+        foreach ($parameters as $key => $value)
+            $piece[] = $key . '=' . rawurlencode($value);
         
-        $url .= '?' . implode('&', $pice);;
+        $url .= '?' . implode('&', $piece);;
         return $url;
     }
     
@@ -200,8 +207,7 @@ class VK
         
         $response = $this->api('getUserSettings');
         
-        if (isset($response['response'])) return true;
-        else return false;
+        return isset($response['response']);
     }
     
 }
