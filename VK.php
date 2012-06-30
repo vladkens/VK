@@ -194,7 +194,7 @@ class VK
         foreach ($parameters as $key => $value)
             $piece[] = $key . '=' . rawurlencode($value);
         
-        $url .= '?' . implode('&', $piece);;
+        $url .= '?' . implode('&', $piece);
         return $url;
     }
     
