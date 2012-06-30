@@ -4,7 +4,7 @@
  * The PHP class for vk.com API and to support OAuth.
  * @author Vlad Pronsky <vladkens@yandex.ru>
  * @license http://www.gnu.org/licenses/gpl.html GPL v3
- * @version 0.1 (Желе)
+ * @version 0.1.1
  */
 
 class VK
@@ -50,7 +50,7 @@ class VK
         $this->access_token = $access_token;
         
         if (!is_null($this->access_token) && !$this->checkAccessToken()) {
-            throw new Exception('Invalid access token.');
+            throw new VKException('Invalid access token.');
         } else {
             $this->auth = true;
         }
@@ -126,7 +126,7 @@ class VK
      */
     public function getAccessToken($code) {
         if (!is_null($this->access_token) && $this->auth) {
-            throw new Exception('Already authorized.');
+            throw new VKException('Already authorized.');
         }
         
         $parameters = array(
@@ -140,7 +140,7 @@ class VK
         
         if (isset($rs['error'])) {
             $message = 'HTTP status code: ' . $this->http_code . '. ' . $rs['error'] . ': ' . $rs['error_description'];
-            throw new Exception($message);
+            throw new VKException($message);
         } else {
             $this->auth = true;
             $this->access_token = $rs['access_token'];
@@ -211,3 +211,7 @@ class VK
     }
     
 }
+
+class VKException extends Exception {  }
+
+?>

@@ -34,6 +34,6 @@ try {
             . '» ' . $user['last_name'] . '<br>';
     }
     
-} catch (Exception $error) {
+} catch (VKException $error) {
     echo $error->getMessage();
 }

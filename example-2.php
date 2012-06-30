@@ -49,6 +49,6 @@ try {
                 . $value['uid'] . ')<br>';
         }
     }
-} catch (Exception $error) {
+} catch (VKException $error) {
     echo $error->getMessage();
 }
