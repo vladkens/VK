@@ -124,7 +124,7 @@ class VK
      *      'expires_in'    => '86399', // time life token in seconds
      *      'user_id'       => '12345')
      */
-    public function getAccessToken($code) {
+    public function getAccessToken($code, $callback_url = 'http://oauth.vk.com/blank.html') {
         if (!is_null($this->access_token) && $this->auth) {
             throw new VKException('Already authorized.');
         }
@@ -132,14 +132,16 @@ class VK
         $parameters = array(
             'client_id'     => $this->app_id,
             'client_secret' => $this->api_secret,
-            'code'          => $code
+            'code'          => $code,
+            'redirect_uri'  => $callback_url
         );
         
         $url = $this->createURL($parameters, $this->baseAccessTokenURL());
         $rs  = $this->http($url);
-        
+
         if (isset($rs['error'])) {
-            $message = 'HTTP status code: ' . $this->http_code . '. ' . $rs['error'] . ': ' . $rs['error_description'];
+            $message = 'HTTP status code: ' . $this->http_code . '. ' . $rs['error'];
+            if (isset($rs['error_description'])) $message .= ': ' . $rs['error_description'];
             throw new VKException($message);
         } else {
             $this->auth = true;

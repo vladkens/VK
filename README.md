@@ -76,7 +76,7 @@ You can ask me any questions by e-mail: <vladkens@yandex.ru>
     
 ### Variables
 * `{APP_ID}` — Your application's identifier.
-* `{API_SECRET}` — Секретный код приложения.
+* `{API_SECRET}` — Secret application key.
 * `{ACCESS_TOKEN}` — Access token.
 * `{API_SETTINGS}` —  Access [rights requested](http://vk.com/developers.php?oid=-17680044&p=Application_Access_Rights) by your app (through comma).
 * `{CALLBACK_URL}` —  Address to which `{CODE}` will be rendered.

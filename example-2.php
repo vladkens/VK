@@ -20,7 +20,7 @@ $vk_config = array(
     'app_id'        => '{YOUR_APP_ID}',
     'api_secret'    => '{YOUR_API_SECRET}',
     'callback_url'  => 'http://{YOUR_DOMAIN}/example-2.php',
-    'api_settings'  => '{ACCESS_RIGHTS_THROUGH_COMMA}' //friends
+    'api_settings'  => '{ACCESS_RIGHTS_THROUGH_COMMA}' // in this example use 'friends'
 );
 
 try {
@@ -32,7 +32,7 @@ try {
             
         echo '<a href=\'' . $authorize_url . '\'>Sing in with VK</a>';
     } else {
-        $access_token = $vk->getAccessToken($_REQUEST['code']);
+        $access_token = $vk->getAccessToken($_REQUEST['code'], $vk_config['callback_url']);
         
         echo 'access token: ' . $access_token['access_token']
             . '<br>expires: ' . $access_token['expires_in'] . ' sec.'
