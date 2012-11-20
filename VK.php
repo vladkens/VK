@@ -4,32 +4,69 @@
  * The PHP class for vk.com API and to support OAuth.
  * @author Vlad Pronsky <vladkens@yandex.ru>
  * @license http://www.gnu.org/licenses/gpl.html GPL v3
- * @version 0.1.1
+ * @version 0.1.2
  */
 
 class VK
 {
-    /* VK application ID. */
+    /**
+     * VK application ID.
+     * @var int
+     */
     private $app_id;
-    /* VK application secret key. */
+    
+    /**
+     * VK application secret key.
+     * @var string
+     */
     private $api_secret;
-    /* VK access token. */
+    
+    /**
+     * VK access token.
+     * @var string
+     */
     private $access_token;
     
-    /* Set timeout. */
-    private $timeout        = 30;
-    /* Set connect timeout. */
+    /**
+     * Set timeout.
+     * @var int
+     */
+    private $timeout = 30;
+    
+    /**
+     * Set connect timeout.
+     * @var int
+     */
     private $connecttimeout = 30;
-    /* Check SLL certificate. */
+    
+    /**
+     * Check SLL certificate.
+     * @var bool
+     */
     private $ssl_verifypeer = false;
-    /* Set library version. */
+    
+    /**
+     * Set library version.
+     * @var string
+     */
     private $lib_version    = '0.1';
     
-    /* Contains the last HTTP status code returned. */
+    /**
+     * Contains the last HTTP status code returned.
+     * @var int
+     */
     private $http_code;
-    /* Contains the last HTTP headers returned. */
+    
+    /**
+     * Contains the last HTTP headers returned.
+     * @var mixed See http://www.php.net/manual/en/function.curl-getinfo.php
+     */
     private $http_info;
-    /* Authorization status. */
+    
+    /**
+     * Authorization status.
+     * @var bool
+     */
     private $auth = false;
     
     /**
@@ -55,8 +92,6 @@ class VK
             $this->auth = true;
         }
     }
-    
-    /* public: */
     
     /**
      * Returns authorization status.
@@ -101,17 +136,23 @@ class VK
     /**
      * Get authorize URL.
      * @param string $api_settings Access rights requested by your app (through comma).
-     * @param string $callback_url 
+     * @param string $callback_url
+     * @param bool $test_mode
      * @return string
      */
-    public function getAuthorizeURL($api_settings = '', $callback_url = 'http://oauth.vk.com/blank.html') {
-
+    public function getAuthorizeURL($api_settings = '', $callback_url = 'http://oauth.vk.com/blank.html',
+        $test_mode = false)
+    {
         $parameters = array(
             'client_id'     => $this->app_id,
             'scope'         => $api_settings,
             'redirect_uri'  => $callback_url,
             'response_type' => 'code'
         );
+        
+        if ($test_mode) {
+            $parameters['test_mode'] = '1';
+        }
         
         return $this->createURL($parameters, $this->baseAuthorizeURL());
     }
@@ -149,8 +190,6 @@ class VK
             return $rs;
         }
     }
-    
-    /* private: */
     
     /**
      * Make HTTP request.

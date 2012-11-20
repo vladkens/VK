@@ -27,6 +27,11 @@ try {
     $vk = new VK($vk_config['app_id'], $vk_config['api_secret']);
     
     if (!isset($_REQUEST['code'])) {
+        /**
+         * If you need switch the application in test mode,
+         * add another parameter "true". Default value "false".
+         * Ex. $vk->getAuthorizeURL($api_settings, $callback_url, true);
+         */
         $authorize_url = $vk->getAuthorizeURL(
             $vk_config['api_settings'], $vk_config['callback_url']);
             
