@@ -4,7 +4,7 @@
  * The PHP class for vk.com API and to support OAuth.
  * @author Vlad Pronsky <vladkens@yandex.ru>
  * @license http://www.gnu.org/licenses/gpl.html GPL v3
- * @version 0.1.2
+ * @version 0.1.3
  */
 
 class VK
@@ -74,7 +74,7 @@ class VK
      */
     public function baseAuthorizeURL()   { return 'http://oauth.vk.com/authorize'; }
     public function baseAccessTokenURL() { return 'https://oauth.vk.com/access_token'; }
-    public function getAPI_URL()         { return 'http://api.vk.com/api.php'; }
+    public function getAPI_URL($method)  { return 'https://api.vk.com/method/' . $method; }
     
     /**
      * @param string $app_id
@@ -111,7 +111,6 @@ class VK
         if (is_null($parameters)) $parameters = array();
         $parameters['api_id']       = $this->app_id;
         $parameters['v']            = $this->lib_version;
-        $parameters['method']       = $method;
         $parameters['timestamp']    = time();
         $parameters['format']       = 'json';
         $parameters['random']       = rand(0, 10000);
@@ -128,9 +127,9 @@ class VK
         $sig .= $this->api_secret;
         
         $parameters['sig'] = md5($sig);
-        $query = $this->createURL($parameters, $this->getAPI_URL());
+        $query = $this->createURL($parameters, $this->getAPI_URL($method));
         
-        return json_decode(file_get_contents($query), true);
+        return $this->http($query);
     }
     
     /**
@@ -247,7 +246,6 @@ class VK
         if (is_null($this->access_token)) return false;
         
         $response = $this->api('getUserSettings');
-        
         return isset($response['response']);
     }
     
