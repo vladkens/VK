@@ -77,9 +77,10 @@ class VK
     public function getAPI_URL($method)  { return 'https://api.vk.com/method/' . $method; }
     
     /**
-     * @param string $app_id
-     * @param string $api_secret
-     * @param string $access_token
+     * @param   string  $app_id
+     * @param   string  $api_secret
+     * @param   string  $access_token
+     * @return  void
      */
     public function __construct($app_id, $api_secret, $access_token = null) {
         $this->app_id       = $app_id;
@@ -95,7 +96,7 @@ class VK
     
     /**
      * Returns authorization status.
-     * @return bool true is auth, false is not auth
+     * @return  bool    true is auth, false is not auth
      */
     public function is_auth() {
         return $this->auth;
@@ -103,17 +104,16 @@ class VK
     
     /**
      * VK API method.
-     * @param string $method Contains VK API method.
-     * @param array $parameters Contains settings call.
-     * @return array
+     * @param   string  $method     Contains VK API method.
+     * @param   array   $parameters Contains settings call.
+     * @return  array
      */
-    public function api($method, $parameters = null) {
-        if (is_null($parameters)) $parameters = array();
-        $parameters['api_id']       = $this->app_id;
-        $parameters['v']            = $this->lib_version;
+    public function api($method, $parameters = array()) {
         $parameters['timestamp']    = time();
-        $parameters['format']       = 'json';
+        $parameters['api_id']       = $this->app_id;
         $parameters['random']       = rand(0, 10000);
+        $parameters['format']       = 'json';
+        $parameters['v']            = $this->lib_version;
         
         if (!is_null($this->access_token))
             $parameters['access_token'] = $this->access_token;
@@ -134,10 +134,10 @@ class VK
     
     /**
      * Get authorize URL.
-     * @param string $api_settings Access rights requested by your app (through comma).
-     * @param string $callback_url
-     * @param bool $test_mode
-     * @return string
+     * @param   string  $api_settings   Access rights requested by your app (through comma).
+     * @param   string  $callback_url   Callback url.
+     * @param   bool    $test_mode
+     * @return  string
      */
     public function getAuthorizeURL($api_settings = '', $callback_url = 'http://oauth.vk.com/blank.html',
         $test_mode = false)
@@ -158,13 +158,15 @@ class VK
     
     /**
      * Get the access token.
-     * @param string $code The code to get access token.
-     * @return array(
-     *      'access_token'  => 'the-access-token',
-     *      'expires_in'    => '86399', // time life token in seconds
-     *      'user_id'       => '12345')
+     * @param   string  $code           The code to get access token.
+     * @param   string  $callback_url   Callback URL
+     * @return  array(
+     *      access_token,
+     *      expires_in,
+     *      user_id)
      */
-    public function getAccessToken($code, $callback_url = 'http://oauth.vk.com/blank.html') {
+    public function getAccessToken($code, $callback_url = 'http://oauth.vk.com/blank.html')
+    {
         if (!is_null($this->access_token) && $this->auth) {
             throw new VKException('Already authorized.');
         }
@@ -177,6 +179,7 @@ class VK
         );
         
         $url = $this->createURL($parameters, $this->baseAccessTokenURL());
+        
         $rs  = $this->http($url);
 
         if (isset($rs['error'])) {
@@ -192,10 +195,10 @@ class VK
     
     /**
      * Make HTTP request.
-     * @param string $url
-     * @param string @method Get or Post
-     * @param array $postfields If $method post
-     * @return array API return
+     * @param   string  $url
+     * @param   string  $method     Get or Post
+     * @param   array   $postfields If $method post
+     * @return  array   API return
      */
     private function http($url, $method = 'GET', $postfields = null) {
         $ch = curl_init();
@@ -225,9 +228,9 @@ class VK
     
     /**
      * Create URL from the sended parameters.
-     * @param array $parameters Add to base url
-     * @param string $url Base url 
-     * @return string 
+     * @param   array   $parameters Add to base url
+     * @param   string  $url        Base url 
+     * @return  string 
      */
     private function createURL($parameters, $url) {
         $piece = array();
@@ -240,7 +243,7 @@ class VK
     
     /**
      * Check freshness of access token.
-     * @return bool true is valid access token else false
+     * @return  bool    true is valid access token else false
      */
     private function checkAccessToken() {
         if (is_null($this->access_token)) return false;

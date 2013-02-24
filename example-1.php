@@ -25,13 +25,12 @@ $vk_config = array(
 try {
     $vk = new VK($vk_config['app_id'], $vk_config['api_secret']);
     
-    $users = $vk->api('users.get', array('uids' => '12345,54321',
-        'fields' => 'first_name,last_name,nickname'));
-    
-    foreach ($users['response'] as $key => $value) {
-        $user = $value['user'];
-        echo $user['first_name'] . ' «' . $user['nickname']
-            . '» ' . $user['last_name'] . '<br>';
+    $users = $vk->api('users.get', array('uids' => '1234,4321',
+        'fields' => 'first_name,last_name,sex'));
+        
+    foreach ($users['response'] as $user) {
+        echo $user['first_name'] . ' ' . $user['last_name'] . ' (' .
+            ($user['sex'] == 1 ? 'Girl' : 'Man') . ')<br />';
     }
     
 } catch (VKException $error) {

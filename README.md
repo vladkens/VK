@@ -42,6 +42,8 @@
 * `{METHOD_NAME}` — Имя API метода. [Все методы](http://vk.com/developers.php?oid=-1&p=Описание_методов_API).
 * `{PARAMETERS}` — Параметры соответствующего метода API.
 
+\* Если нужно получить бесконечный токен, используете параметр `offline` в `{API_SETTINGS}`.
+
 ## English
 
 The PHP class for vk.com API and to support OAuth.
@@ -83,3 +85,5 @@ You can ask me any questions by e-mail: <vladkens@yandex.ru>
 * `{CODE}` — The code to get access token.
 * `{METHOD_NAME}` — Name of the API method. [All methods.](http://vk.com/developers.php?oid=-17680044&p=API_Method_Description)
 * `{PARAMETERS}` — Parameters of the corresponding API methods.
+
+\* If you need infinite token use key `offline` in `{API_SETTINGS}`.
