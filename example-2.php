@@ -36,7 +36,7 @@ try {
         $authorize_url = $vk->getAuthorizeURL(
             $vk_config['api_settings'], $vk_config['callback_url']);
             
-        echo '<a href="' . $authorize_url . '">Sigg in with VK</a>';
+        echo '<a href="' . $authorize_url . '">Sign in with VK</a>';
     } else {
         $access_token = $vk->getAccessToken($_REQUEST['code'], $vk_config['callback_url']);
         
