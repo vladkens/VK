@@ -1,0 +1,19 @@
+{
+    "name": "vladkens/vk",
+    "description": "The PHP class for vk.com API with support OAuth.",
+    "keywords": ["vk", "vk.com", "api", "oauth"],
+    "type": "class",
+    "license": "GNU GPL v3",
+    "authors": [
+        {
+            "name": "Vlad Pronsky",
+            "email": "vladkens@yandex.ru"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/composer/composer/issues"
+    },
+    "require": {
+        "php": ">=5.3.2"
+    }
+}
