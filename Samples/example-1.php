@@ -15,7 +15,7 @@
 
 error_reporting(E_ALL);
 
-require_once('VK.php');
+require_once('../VK.php');
 
 $vk_config = array(
     'app_id'        => '{YOUR_APP_ID}',
