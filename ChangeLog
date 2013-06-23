@@ -1,3 +1,7 @@
+== 0.1.4
+* Fixed bug changing the option "v" in API methods.
+* Added sample use VK library (search, play and download music).
+
 == 0.1.3
 * Update example-1.php
 * Update documentation.

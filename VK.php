@@ -4,7 +4,7 @@
  * The PHP class for vk.com API and to support OAuth.
  * @author Vlad Pronsky <vladkens@yandex.ru>
  * @license http://www.gnu.org/licenses/gpl.html GPL v3
- * @version 0.1.3
+ * @version 0.1.4
  */
 
 class VK
@@ -113,7 +113,6 @@ class VK
         $parameters['api_id']       = $this->app_id;
         $parameters['random']       = rand(0, 10000);
         $parameters['format']       = 'json';
-        $parameters['v']            = $this->lib_version;
         
         if (!is_null($this->access_token))
             $parameters['access_token'] = $this->access_token;
