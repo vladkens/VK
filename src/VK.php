@@ -3,10 +3,10 @@
 /**
  * The PHP class for vk.com API and to support OAuth.
  * @author Vlad Pronsky <vladkens@yandex.ru>
- * @license http://www.gnu.org/licenses/gpl.html GPL v3
- * @version 0.1.4
+ * @license http://www.gnu.org/licenses/gpl.html GPL-3.0
+ * @version 0.1.5
  */
-
+ 
 class VK
 {
     /**
@@ -44,12 +44,6 @@ class VK
      * @var bool
      */
     private $ssl_verifypeer = false;
-    
-    /**
-     * Set library version.
-     * @var string
-     */
-    private $lib_version    = '0.1';
     
     /**
      * Contains the last HTTP status code returned.
@@ -201,7 +195,7 @@ class VK
      */
     private function http($url, $method = 'GET', $postfields = null) {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_USERAGENT,      'VK v' . $this->lib_version);
+        curl_setopt($ch, CURLOPT_USERAGENT,      'VK/1.0 (+https://github.com/vladkens/VK)');
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->connecttimeout);
         curl_setopt($ch, CURLOPT_TIMEOUT,        $this->timeout);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
@@ -252,7 +246,5 @@ class VK
     }
     
 }
-
-class VKException extends Exception {  }
 
 ?>
