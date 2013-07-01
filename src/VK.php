@@ -7,6 +7,8 @@
  * @version 0.1.4
  */
 
+namespace VK;
+
 class VK
 {
     /**
@@ -252,7 +254,3 @@ class VK
     }
     
 }
-
-class VKException extends Exception {  }
-
-?>
