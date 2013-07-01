@@ -10,6 +10,10 @@
             "email": "vladkens@yandex.ru"
         }
     ],
+    "support": {
+        "issues": "https://github.com/vladkens/VK/issues",
+        "source": "https://github.com/vladkens/VK"
+    },
     "require": {
         "php": ">=5.3.0"
     },
