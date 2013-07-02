@@ -10,8 +10,8 @@
 class VK
 {
     /**
-     * VK application ID.
-     * @var int
+     * VK application id.
+     * @var string
      */
     private $app_id;
     
@@ -28,47 +28,20 @@ class VK
     private $access_token;
     
     /**
-     * Set timeout.
-     * @var int
-     */
-    private $timeout = 30;
-    
-    /**
-     * Set connect timeout.
-     * @var int
-     */
-    private $connecttimeout = 30;
-    
-    /**
-     * Check SLL certificate.
-     * @var bool
-     */
-    private $ssl_verifypeer = false;
-    
-    /**
-     * Contains the last HTTP status code returned.
-     * @var int
-     */
-    private $http_code;
-    
-    /**
-     * Contains the last HTTP headers returned.
-     * @var mixed See http://www.php.net/manual/en/function.curl-getinfo.php
-     */
-    private $http_info;
-    
-    /**
      * Authorization status.
      * @var bool
      */
     private $auth = false;
     
     /**
-     * Set base API URLs.
+     * Instance curl.
+     * @var resourse
      */
-    public function baseAuthorizeURL()   { return 'http://oauth.vk.com/authorize'; }
-    public function baseAccessTokenURL() { return 'https://oauth.vk.com/access_token'; }
-    public function getAPI_URL($method)  { return 'https://api.vk.com/method/' . $method; }
+    private $ch;
+    
+    public function baseAuthorizeUrl() { return 'https://oauth.vk.com/authorize'; }
+    public function baseAccessTokenUrl() { return 'https://oauth.vk.com/access_token'; }
+    
     
     /**
      * @param   string  $app_id
@@ -76,64 +49,47 @@ class VK
      * @param   string  $access_token
      * @return  void
      */
-    public function __construct($app_id, $api_secret, $access_token = null) {
+    public function __construct($app_id, $api_secret, $access_token = null)
+    {
         $this->app_id       = $app_id;
         $this->api_secret   = $api_secret;
         $this->access_token = $access_token;
         
+        $this->ch = curl_init();
+        
         if (!is_null($this->access_token) && !$this->checkAccessToken()) {
-            throw new VKException('Invalid access token.');
+            throw new VKException('Invalide access token.');
         } else {
             $this->auth = true;
         }
     }
     
     /**
-     * Returns authorization status.
-     * @return  bool    true is auth, false is not auth
+     * @return  void
      */
-    public function is_auth() {
-        return $this->auth;
+    public function __destruct()
+    {
+        curl_close($this->ch);
     }
     
     /**
-     * VK API method.
-     * @param   string  $method     Contains VK API method.
-     * @param   array   $parameters Contains settings call.
-     * @return  array
+     * @param   string  $method
+     * @param   string  $response_format
+     * @return  string
      */
-    public function api($method, $parameters = array()) {
-        $parameters['timestamp']    = time();
-        $parameters['api_id']       = $this->app_id;
-        $parameters['random']       = rand(0, 10000);
-        $parameters['format']       = 'json';
-        
-        if (!is_null($this->access_token))
-            $parameters['access_token'] = $this->access_token;
-            
-        ksort($parameters);
-        
-        $sig = '';
-        foreach ($parameters as $key => $value) {
-            $sig .= $key . '=' . $value;
-        }
-        $sig .= $this->api_secret;
-        
-        $parameters['sig'] = md5($sig);
-        $query = $this->createURL($parameters, $this->getAPI_URL($method));
-        
-        return $this->http($query);
+    public function getApiUrl($method, $response_format = 'json')
+    {
+        return 'https://api.vk.com/method/' . $method . '.' . $response_format;
     }
     
     /**
-     * Get authorize URL.
-     * @param   string  $api_settings   Access rights requested by your app (through comma).
-     * @param   string  $callback_url   Callback url.
+     * @param   string  $api_settings
+     * @param   string  $callback_url
      * @param   bool    $test_mode
      * @return  string
      */
-    public function getAuthorizeURL($api_settings = '', $callback_url = 'http://oauth.vk.com/blank.html',
-        $test_mode = false)
+    public function getAuthorizeUrl($api_settings = '',
+        $callback_url = 'https://api.vk.com/blank.html', $test_mode = false)
     {
         $parameters = array(
             'client_id'     => $this->app_id,
@@ -142,23 +98,18 @@ class VK
             'response_type' => 'code'
         );
         
-        if ($test_mode) {
-            $parameters['test_mode'] = '1';
-        }
-        
-        return $this->createURL($parameters, $this->baseAuthorizeURL());
+        if ($test_mode)
+            $parameters['test_mode'] = 1;
+            
+        return $this->createUrl($this->baseAuthorizeUrl(), $parameters);
     }
     
     /**
-     * Get the access token.
-     * @param   string  $code           The code to get access token.
-     * @param   string  $callback_url   Callback URL
-     * @return  array(
-     *      access_token,
-     *      expires_in,
-     *      user_id)
+     * @param   string  $code
+     * @param   string  $callback_url
+     * @return  array
      */
-    public function getAccessToken($code, $callback_url = 'http://oauth.vk.com/blank.html')
+    public function getAccessToken($code, $callback_url = 'https://api.vk.com/blank.html')
     {
         if (!is_null($this->access_token) && $this->auth) {
             throw new VKException('Already authorized.');
@@ -171,14 +122,12 @@ class VK
             'redirect_uri'  => $callback_url
         );
         
-        $url = $this->createURL($parameters, $this->baseAccessTokenURL());
-        
-        $rs  = $this->http($url);
+        $rs = json_decode($this->request(
+            $this->createUrl($this->baseAccessTokenUrl(), $parameters)), true);
 
         if (isset($rs['error'])) {
-            $message = 'HTTP status code: ' . $this->http_code . '. ' . $rs['error'];
-            if (isset($rs['error_description'])) $message .= ': ' . $rs['error_description'];
-            throw new VKException($message);
+            throw new VKException($rs['error'] .
+                (!isset($rs['error_description']) ?: ': ' . $rs['error_description']));
         } else {
             $this->auth = true;
             $this->access_token = $rs['access_token'];
@@ -187,45 +136,58 @@ class VK
     }
     
     /**
-     * Make HTTP request.
-     * @param   string  $url
-     * @param   string  $method     Get or Post
-     * @param   array   $postfields If $method post
-     * @return  array   API return
+     * @param   string  $method
+     * @param   array   $parameters
+     * @param   string  $format
+     * @return  mixed
      */
-    private function http($url, $method = 'GET', $postfields = null) {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_USERAGENT,      'VK/1.0 (+https://github.com/vladkens/VK)');
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->connecttimeout);
-        curl_setopt($ch, CURLOPT_TIMEOUT,        $this->timeout);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    public function api($method, $parameters = array(), $format = 'array')
+    {
+        $parameters['timestamp']    = time();
+        $parameters['api_id']       = $this->app_id;
+        $parameters['random']       = rand(0, 10000);
+        if (!is_null($this->access_token)) $parameters['access_token'] = $this->access_token;
+        ksort($parameters);
         
-        if ($method === 'POST') {
-            curl_setopt($ch, CURLOPT_POST, true);
-            
-            if (!is_null($postfields)) {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $postfields);
-            }
+        $sig = '';
+        foreach ($parameters as $key => $value) {
+            $sig .= $key . '=' . $value;
         }
+        $sig .= $this->api_secret;
         
-        curl_setopt($ch, CURLOPT_URL, $url);
+        $parameters['sig'] = md5($sig);
         
-        $rs = curl_exec($ch);
-        $this->http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $this->http_info = curl_getinfo($ch);
-        curl_close($ch);
-        
-        return json_decode($rs, true);
+        $rs = $this->request($this->createUrl(
+            $this->getApiUrl($method, $format == 'array' ? 'json' : $format), $parameters));
+        return $format == 'array' ? json_decode($rs, true) : $rs;
     }
     
     /**
-     * Create URL from the sended parameters.
-     * @param   array   $parameters Add to base url
-     * @param   string  $url        Base url 
-     * @return  string 
+     * @return  bool
      */
-    private function createURL($parameters, $url) {
+    public function isAuth()
+    {
+        return $this->auth;
+    }
+    
+    /**
+     * @return  bool
+     */
+    private function checkAccessToken()
+    {
+        if (is_null($this->access_token)) return false;
+        
+        $rs = $this->api('getUserSettings');
+        return isset($rs['response']);
+    }
+    
+    /**
+     * @param   string  $url
+     * @param   array   $parameters
+     * @return  string
+     */
+    private function createUrl($url, $parameters)
+    {
         $piece = array();
         foreach ($parameters as $key => $value)
             $piece[] = $key . '=' . rawurlencode($value);
@@ -235,16 +197,24 @@ class VK
     }
     
     /**
-     * Check freshness of access token.
-     * @return  bool    true is valid access token else false
+     * @param   string  $url
+     * @param   string  $method
+     * @param   array   $postfields
+     * @return  string
      */
-    private function checkAccessToken() {
-        if (is_null($this->access_token)) return false;
+    private function request($url, $method = 'GET', $postfields = array())
+    {
+        curl_setopt_array($this->ch, array(
+            CURLOPT_USERAGENT       => 'VK/1.0 (+https://github.com/vladkens/VK))',
+            CURLOPT_RETURNTRANSFER  => true,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_POST            => ($method == 'POST'),
+            CURLOPT_POSTFIELDS      => $postfields,
+            CURLOPT_URL             => $url
+        ));
         
-        $response = $this->api('getUserSettings');
-        return isset($response['response']);
+        return curl_exec($this->ch);
     }
     
-}
-
-?>
+};
+    

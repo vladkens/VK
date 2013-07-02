@@ -27,6 +27,10 @@
     2. Получаем токен доступа по ключу из ссылки авторизации
 
             $vk->getAccessToken('{CODE}');
+            
+    3. Проверить авторизирован ли пользователь
+            
+            $vk->isAuth(); // return bool
 
 4. Используем API
 
@@ -71,7 +75,11 @@ You can ask me any questions by e-mail: <vladkens@yandex.ru>
     2. Get the token access by code from the authoriz link
 
             $vk->getAccessToken('{CODE}');
-
+            
+    3. Check the status of authorization
+            
+            $vk->isAuth(); // return bool
+            
 4. Usage API
 
         $vk->api('{METHOD_NAME}', '{PARAMETERS}');

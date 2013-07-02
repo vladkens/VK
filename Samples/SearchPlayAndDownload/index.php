@@ -1,13 +1,15 @@
 <?php
+
 /**
- * PHP >= 5.4
+ * Require PHP >= 5.4
  * Search, play and download audio files use VK API.
  * Before downloading files are renamed in the format "%artist% - %title%"
  */
-error_reporting(E_ALL);
-ini_set('default_charset', 'utf-8');
 
-require '../../VK.php';
+ini_set('default_charset', 'utf-8');
+error_reporting(E_ALL);
+require_once('../../src/VK.php');
+require_once('../../src/VKException.php');
 
 $vk_config = [
     'app_id'        => '{YOUR_APP_ID}',
@@ -15,28 +17,32 @@ $vk_config = [
     'access_token'  => '{YOUR_ACCESS_TOKEN}' // To get access token see exmaple-2.php
 ];
 
-$vk = new VK($vk_config['app_id'], $vk_config['api_secret'], $vk_config['access_token']);
+try {
+    $vk = new VK($vk_config['app_id'], $vk_config['api_secret'], $vk_config['access_token']);
 
-// Rename and download audio file
-if (isset($_GET['download']) && !empty($_GET['download'])) {
-    $rs = $vk->api('audio.getById', ['audios' => $_GET['download']]);
-    if (isset($rs['response'])) {
-        $rs = $rs['response'][0];
-        header('Content-Type: application/force-download');
-        header('Content-Disposition: attachment; filename="'.$rs['artist'].' - '.$rs['title'].'.mp3"');
-        readfile($rs['url']);
+    // Rename and download audio file
+    if (isset($_GET['download']) && !empty($_GET['download'])) {
+        $rs = $vk->api('audio.getById', ['audios' => $_GET['download']]);
+        if (isset($rs['response'])) {
+            $rs = $rs['response'][0];
+            header('Content-Type: application/force-download');
+            header('Content-Disposition: attachment; filename="'.$rs['artist'].' - '.$rs['title'].'.mp3"');
+            readfile($rs['url']);
+        }
+        die();
+    } else { // Get audio list from query string
+        $q  = isset($_GET['q']) ? $_GET['q'] : '';
+        $rs = [];
+        
+        if (!empty($q)) {
+            $rs = $vk->api('audio.search', [
+                'v' => '2.0',
+                'q' => $q
+            ]);
+        }
     }
-    die();
-} else { // Get audio list from query string
-    $q  = isset($_GET['q']) ? $_GET['q'] : '';
-    $rs = [];
-    
-    if (!empty($q)) {
-        $rs = $vk->api('audio.search', [
-            'v' => '2.0',
-            'q' => $q
-        ]);
-    }
+} catch (VKException $error) {
+    die($error->getMessage());
 }
 
 ?>

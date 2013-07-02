@@ -1,5 +1,5 @@
 <!doctype html>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <style>
     html, body { font-family: monospace; }
     </style>
@@ -13,8 +13,8 @@
  */
 
 error_reporting(E_ALL);
-
-require_once('../VK.php');
+require_once('../src/VK.php');
+require_once('../src/VKException.php');
 
 $vk_config = array(
     'app_id'        => '{YOUR_APP_ID}',
@@ -41,8 +41,8 @@ try {
         $access_token = $vk->getAccessToken($_REQUEST['code'], $vk_config['callback_url']);
         
         echo 'access token: ' . $access_token['access_token']
-            . '<br>expires: ' . $access_token['expires_in'] . ' sec.'
-            . '<br>user id: ' . $access_token['user_id'] . '<br>';
+            . '<br />expires: ' . $access_token['expires_in'] . ' sec.'
+            . '<br />user id: ' . $access_token['user_id'] . '<br /><br />';
             
         $user_friends = $vk->api('friends.get', array(
             'uid'       => '12345',
@@ -52,7 +52,7 @@ try {
         
         foreach ($user_friends['response'] as $key => $value) {
             echo $value['first_name'] . ' ' . $value['last_name'] . ' ('
-                . $value['uid'] . ')<br>';
+                . $value['uid'] . ')<br />';
         }
     }
 } catch (VKException $error) {

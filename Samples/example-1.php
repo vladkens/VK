@@ -1,9 +1,9 @@
 <!doctype html>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <style>
     html, body { font-family: monospace; }
     </style>
-
+    
 <?php
 
 /**
@@ -14,18 +14,14 @@
  */
 
 error_reporting(E_ALL);
-
-require_once('../VK.php');
-
-$vk_config = array(
-    'app_id'        => '{YOUR_APP_ID}',
-    'api_secret'    => '{YOUR_API_SECRET}'
-);
+require_once('../src/VK.php');
+require_once('../src/VKException.php');
 
 try {
-    $vk = new VK($vk_config['app_id'], $vk_config['api_secret']);
+    $vk = new VK('{YOUR_APP_ID}', '{YOUR_API_SECRET}'); // Use your app_id and api_secret
     
-    $users = $vk->api('users.get', array('uids' => '1234,4321',
+    $users = $vk->api('users.get', array(
+        'uids'   => '1234,4321',
         'fields' => 'first_name,last_name,sex'));
         
     foreach ($users['response'] as $user) {
