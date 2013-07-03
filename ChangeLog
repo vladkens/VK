@@ -1,3 +1,9 @@
+== 0.1.5 (Йогурт)
+* Added Composer support.
+* Connection to the api server in keep-alive mode.
+* Added json and xml formats api's response (default php array).
+* Rename and update some methods in VK class.
+
 == 0.1.4
 * Fixed bug changing the option "v" in API methods.
 * Added sample use VK library (search, play and download music).
