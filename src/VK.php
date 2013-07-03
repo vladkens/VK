@@ -9,9 +9,6 @@
  
 class VK
 {
-    const AUTHORIZE_URL    = 'https://oauth.vk.com/authorize';
-    const ACCESS_TOKEN_URL = 'https://oauth.vk.com/access_token';
-
     /**
      * VK application id.
      * @var string
@@ -41,13 +38,16 @@ class VK
      * @var resourse
      */
     private $ch;
+    
+    const AUTHORIZE_URL    = 'https://oauth.vk.com/authorize';
+    const ACCESS_TOKEN_URL = 'https://oauth.vk.com/access_token';
 
     /**
      * @param   string  $app_id
      * @param   string  $api_secret
      * @param   string  $access_token
-     *
-     * @throws VKException
+     * @throws  VKException
+     * @return  void
      */
     public function __construct($app_id, $api_secret, $access_token = null)
     {
@@ -107,9 +107,7 @@ class VK
     /**
      * @param   string  $code
      * @param   string  $callback_url
-     *
-     * @throws VKException
-     *
+     * @throws  VKException
      * @return  array
      */
     public function getAccessToken($code, $callback_url = 'https://api.vk.com/blank.html')

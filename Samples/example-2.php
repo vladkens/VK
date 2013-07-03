@@ -19,7 +19,7 @@ require_once('../src/VKException.php');
 $vk_config = array(
     'app_id'        => '{YOUR_APP_ID}',
     'api_secret'    => '{YOUR_API_SECRET}',
-    'callback_url'  => 'http://{YOUR_DOMAIN}/example-2.php',
+    'callback_url'  => 'http://{YOUR_DOMAIN}/samples/example-2.php',
     'api_settings'  => '{ACCESS_RIGHTS_THROUGH_COMMA}' // In this example use 'friends'.
     // If you need infinite token use key 'offline'.
 );
