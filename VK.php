@@ -9,6 +9,10 @@
 
 class VK
 {
+    const AUTHORIZE_URL    = 'http://oauth.vk.com/authorize';
+    const ACCESS_TOKEN_URL = 'https://oauth.vk.com/access_token';
+    const API_URL          = 'https://api.vk.com/method/';
+
     /**
      * VK application ID.
      * @var int
@@ -70,13 +74,6 @@ class VK
     private $auth = false;
     
     /**
-     * Set base API URLs.
-     */
-    public function baseAuthorizeURL()   { return 'http://oauth.vk.com/authorize'; }
-    public function baseAccessTokenURL() { return 'https://oauth.vk.com/access_token'; }
-    public function getAPI_URL($method)  { return 'https://api.vk.com/method/' . $method; }
-    
-    /**
      * @param   string  $app_id
      * @param   string  $api_secret
      * @param   string  $access_token
@@ -126,7 +123,7 @@ class VK
         $sig .= $this->api_secret;
         
         $parameters['sig'] = md5($sig);
-        $query = $this->createURL($parameters, $this->getAPI_URL($method));
+        $query = $this->createURL($parameters, self::API_URL . $method);
         
         return $this->http($query);
     }
@@ -152,7 +149,7 @@ class VK
             $parameters['test_mode'] = '1';
         }
         
-        return $this->createURL($parameters, $this->baseAuthorizeURL());
+        return $this->createURL($parameters, self::AUTHORIZE_URL);
     }
     
     /**
@@ -177,7 +174,7 @@ class VK
             'redirect_uri'  => $callback_url
         );
         
-        $url = $this->createURL($parameters, $this->baseAccessTokenURL());
+        $url = $this->createURL($parameters, self::ACCESS_TOKEN_URL);
         
         $rs  = $this->http($url);
 
