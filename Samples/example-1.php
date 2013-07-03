@@ -14,11 +14,11 @@
  */
 
 error_reporting(E_ALL);
-require_once('../src/VK.php');
-require_once('../src/VKException.php');
+require_once('../src/VK/VK.php');
+require_once('../src/VK/VKException.php');
 
 try {
-    $vk = new VK('{YOUR_APP_ID}', '{YOUR_API_SECRET}'); // Use your app_id and api_secret
+    $vk = new VK\VK('{YOUR_APP_ID}', '{YOUR_API_SECRET}'); // Use your app_id and api_secret
     
     $users = $vk->api('users.get', array(
         'uids'   => '1234,4321',
@@ -29,6 +29,6 @@ try {
             ($user['sex'] == 1 ? 'Girl' : 'Man') . ')<br />';
     }
     
-} catch (VKException $error) {
+} catch (VK\VKException $error) {
     echo $error->getMessage();
 }

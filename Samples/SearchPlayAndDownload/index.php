@@ -8,8 +8,8 @@
 
 ini_set('default_charset', 'utf-8');
 error_reporting(E_ALL);
-require_once('../../src/VK.php');
-require_once('../../src/VKException.php');
+require_once('../../src/VK/VK.php');
+require_once('../../src/VK/VKException.php');
 
 $vk_config = [
     'app_id'        => '{YOUR_APP_ID}',
@@ -18,7 +18,7 @@ $vk_config = [
 ];
 
 try {
-    $vk = new VK($vk_config['app_id'], $vk_config['api_secret'], $vk_config['access_token']);
+    $vk = new VK\VK($vk_config['app_id'], $vk_config['api_secret'], $vk_config['access_token']);
 
     // Rename and download audio file
     if (isset($_GET['download']) && !empty($_GET['download'])) {
@@ -41,7 +41,7 @@ try {
             ]);
         }
     }
-} catch (VKException $error) {
+} catch (VK\VKException $error) {
     die($error->getMessage());
 }
 

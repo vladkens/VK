@@ -13,8 +13,8 @@
  */
 
 error_reporting(E_ALL);
-require_once('../src/VK.php');
-require_once('../src/VKException.php');
+require_once('../src/VK/VK.php');
+require_once('../src/VK/VKException.php');
 
 $vk_config = array(
     'app_id'        => '{YOUR_APP_ID}',
@@ -23,7 +23,7 @@ $vk_config = array(
 );
 
 try {
-    $vk = new VK($vk_config['app_id'], $vk_config['api_secret'], $vk_config['access_token']);
+    $vk = new VK\VK($vk_config['app_id'], $vk_config['api_secret'], $vk_config['access_token']);
     
     $user_friends = $vk->api('friends.get', array(
         'uid'       => '12345',
@@ -36,7 +36,7 @@ try {
             . $value['uid'] . ')<br />';
     }
     
-} catch (VKException $error) {
+} catch (VK\VKException $error) {
     echo $error->getMessage();
 }
 

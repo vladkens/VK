@@ -13,11 +13,11 @@
 2. Создайте объект VK
     1. без авторизации
 
-            $vk = new VK('{APP_ID}', '{API_SECRET}');
+            $vk = new VK\VK('{APP_ID}', '{API_SECRET}');
 
     2. с авторизацией
 
-            $vk = new VK('{APP_ID}', '{API_SECRET}', '{ACCESS_TOKEN}');
+            $vk = new VK\VK('{APP_ID}', '{API_SECRET}', '{ACCESS_TOKEN}');
 
 3. Если нужна авторизация
     1. Получаем ссылку авторизации
@@ -61,11 +61,11 @@ You can ask me any questions by e-mail: <vladkens@yandex.ru>
 2. Create VK object
     1. without authorization
 
-            $vk = new VK('{APP_ID}', '{API_SECRET}');
+            $vk = new VK\VK('{APP_ID}', '{API_SECRET}');
 
     2. with authorization
 
-            $vk = new VK('{APP_ID}', '{API_SECRET}', '{ACCESS_TOKEN}');
+            $vk = new VK\VK('{APP_ID}', '{API_SECRET}', '{ACCESS_TOKEN}');
 
 3. If need authorization
     1. Get authoriz link

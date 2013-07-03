@@ -13,8 +13,8 @@
  */
 
 error_reporting(E_ALL);
-require_once('../src/VK.php');
-require_once('../src/VKException.php');
+require_once('../src/VK/VK.php');
+require_once('../src/VK/VKException.php');
 
 $vk_config = array(
     'app_id'        => '{YOUR_APP_ID}',
@@ -25,7 +25,7 @@ $vk_config = array(
 );
 
 try {
-    $vk = new VK($vk_config['app_id'], $vk_config['api_secret']);
+    $vk = new VK\VK($vk_config['app_id'], $vk_config['api_secret']);
     
     if (!isset($_REQUEST['code'])) {
         /**
@@ -55,6 +55,6 @@ try {
                 . $value['uid'] . ')<br />';
         }
     }
-} catch (VKException $error) {
+} catch (VK\VKException $error) {
     echo $error->getMessage();
 }

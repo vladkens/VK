@@ -1,3 +1,6 @@
+== 0.1.6 (Молоко)
+* Added namespace.
+
 == 0.1.5 (Йогурт)
 * Added Composer support.
 * Connection to the api server in keep-alive mode.
@@ -20,5 +23,5 @@
 * Added VKException class.
 * Update documentation.
 
-== 0.1 (Желе)
+== 0.1.0 (Желе)
 * First release.
