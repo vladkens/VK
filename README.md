@@ -48,6 +48,9 @@
 
 \* Если нужно получить бесконечный токен, используете параметр `offline` в `{API_SETTINGS}`.
 
+### Лицензия
+[MIT](https://raw.github.com/vladkens/VK/master/LICENSE)
+
 ## English
 
 The PHP class for vk.com API and to support OAuth.
@@ -95,3 +98,6 @@ You can ask me any questions by e-mail: <vladkens@yandex.ru>
 * `{PARAMETERS}` — Parameters of the corresponding API methods.
 
 \* If you need infinite token use key `offline` in `{API_SETTINGS}`.
+
+### License
+[MIT](https://raw.github.com/vladkens/VK/master/LICENSE)
