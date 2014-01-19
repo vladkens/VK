@@ -24,6 +24,12 @@ class VK
     private $api_secret;
     
     /**
+     * API version. If null uses latest version.
+     * @var int
+     */
+    private $api_version;
+    
+    /**
      * VK access token.
      * @var string
      */
@@ -45,6 +51,7 @@ class VK
     const ACCESS_TOKEN_URL = 'https://oauth.vk.com/access_token';
 
     /**
+     * Constructor.
      * @param   string  $app_id
      * @param   string  $api_secret
      * @param   string  $access_token
@@ -59,14 +66,17 @@ class VK
         
         $this->ch = curl_init();
         
-        if (!is_null($this->access_token) && !$this->checkAccessToken()) {
-            throw new VKException('Invalide access token.');
-        } else {
-            $this->auth = true;
+        if (!is_null($this->access_token)) {
+            if (!$this->checkAccessToken()) {
+                throw new VKException('Invalide access token.');
+            } else {
+                $this->auth = true;
+            }
         }
     }
     
     /**
+     * Destructor.
      * @return  void
      */
     public function __destruct()
@@ -75,6 +85,17 @@ class VK
     }
     
     /**
+     * Set special API version.
+     * @param   int     $version
+     * @return  void
+     */
+    public function setApiVersion($version)
+    {
+        $this->api_version = $version;
+    }
+    
+    /**
+     * Returns base API url. 
      * @param   string  $method
      * @param   string  $response_format
      * @return  string
@@ -85,6 +106,7 @@ class VK
     }
     
     /**
+     * Returns authorization link with passed parameters.
      * @param   string  $api_settings
      * @param   string  $callback_url
      * @param   bool    $test_mode
@@ -107,6 +129,7 @@ class VK
     }
     
     /**
+     * Returns access token by code received on authorization link.
      * @param   string  $code
      * @param   string  $callback_url
      * @throws  VKException
@@ -139,6 +162,28 @@ class VK
     }
     
     /**
+     * Return user authorization status.
+     * @return  bool
+     */
+    public function isAuth()
+    {
+        return $this->auth;
+    }
+    
+    /**
+     * Check for validity access token.
+     * @return  bool
+     */
+    private function checkAccessToken()
+    {
+        if (is_null($this->access_token)) return false;
+        
+        $rs = $this->api('getUserSettings');
+        return isset($rs['response']);
+    }
+    
+    /**
+     * Execute API method with parameters and return result.
      * @param   string  $method
      * @param   array   $parameters
      * @param   string  $format
@@ -146,10 +191,12 @@ class VK
      */
     public function api($method, $parameters = array(), $format = 'array')
     {
-        $parameters['timestamp']    = time();
-        $parameters['api_id']       = $this->app_id;
-        $parameters['random']       = rand(0, 10000);
+        $parameters['timestamp'] = time();
+        $parameters['api_id']    = $this->app_id;
+        $parameters['random']    = rand(0, 10000);
+        
         if (!is_null($this->access_token)) $parameters['access_token'] = $this->access_token;
+        if (!is_null($this->api_version)) $parameters['v'] = $this->api_version;
         ksort($parameters);
         
         $sig = '';
@@ -166,25 +213,7 @@ class VK
     }
     
     /**
-     * @return  bool
-     */
-    public function isAuth()
-    {
-        return $this->auth;
-    }
-    
-    /**
-     * @return  bool
-     */
-    private function checkAccessToken()
-    {
-        if (is_null($this->access_token)) return false;
-        
-        $rs = $this->api('getUserSettings');
-        return isset($rs['response']);
-    }
-    
-    /**
+     * Concatinate keys and values to url format and return url.
      * @param   string  $url
      * @param   array   $parameters
      * @return  string
@@ -200,6 +229,7 @@ class VK
     }
     
     /**
+     * Executes request on link.
      * @param   string  $url
      * @param   string  $method
      * @param   array   $postfields

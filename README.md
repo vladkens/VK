@@ -35,6 +35,10 @@
 4. Используем API
 
         $vk->api('{METHOD_NAME}', '{PARAMETERS}');
+        
+### Другие методы
+* Установить версию API.
+    `$vk->setApiVersion({NUBMER});`
     
 ### Переменные
 * `{APP_ID}` — ID приложения вконтакте.
@@ -86,6 +90,10 @@ You can ask me any questions by e-mail: <vladkens@yandex.ru>
 4. Usage API
 
         $vk->api('{METHOD_NAME}', '{PARAMETERS}');
+
+### Other methods
+* Set version of API.
+    `$vk->setApiVersion({NUBMER});`
     
 ### Variables
 * `{APP_ID}` — Your application's identifier.

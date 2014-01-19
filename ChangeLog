@@ -1,7 +1,12 @@
-== 0.1.6 (Молоко)
+== 0.1.7
+* Added ability to select the API version.
+* Fixed bug #8.
+* Update PHPDoc.
+
+== 0.1.6
 * Added namespace.
 
-== 0.1.5 (Йогурт)
+== 0.1.5
 * Added Composer support.
 * Connection to the api server in keep-alive mode.
 * Added json and xml formats api's response (default php array).
@@ -23,5 +28,5 @@
 * Added VKException class.
 * Update documentation.
 
-== 0.1.0 (Желе)
+== 0.1.0
 * First release.
