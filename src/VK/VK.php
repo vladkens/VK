@@ -207,8 +207,16 @@ class VK
         
         $parameters['sig'] = md5($sig);
         
-        $rs = $this->request($this->createUrl(
-            $this->getApiUrl($method, $format == 'array' ? 'json' : $format), $parameters));
+        if ($method == 'execute')
+        {
+            $rs = $this->request(
+                $this->getApiUrl($method, $format == 'array' ? 'json' : $format), "POST", $parameters);
+        }
+        else
+        {
+            $rs = $this->request($this->createUrl(
+                $this->getApiUrl($method, $format == 'array' ? 'json' : $format), $parameters));
+        }
         return $format == 'array' ? json_decode($rs, true) : $rs;
     }
     
