@@ -228,11 +228,7 @@ class VK
      */
     private function createUrl($url, $parameters)
     {
-        $piece = array();
-        foreach ($parameters as $key => $value)
-            $piece[] = $key . '=' . rawurlencode($value);
-        
-        $url .= '?' . implode('&', $piece);
+        $url .= '?' . http_build_query($parameters);
         return $url;
     }
     
