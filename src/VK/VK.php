@@ -187,9 +187,10 @@ class VK
      * @param   string  $method
      * @param   array   $parameters
      * @param   string  $format
+     * @param   string  $requestMethod
      * @return  mixed
      */
-    public function api($method, $parameters = array(), $format = 'array')
+    public function api($method, $parameters = array(), $format = 'array', $requestMethod = 'get')
     {
         $parameters['timestamp'] = time();
         $parameters['api_id']    = $this->app_id;
@@ -207,7 +208,7 @@ class VK
         
         $parameters['sig'] = md5($sig);
         
-        if ($method == 'execute')
+        if ($method == 'execute' || $requestMethod == 'post')
         {
             $rs = $this->request(
                 $this->getApiUrl($method, $format == 'array' ? 'json' : $format), "POST", $parameters);
