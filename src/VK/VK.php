@@ -217,6 +217,12 @@ class VK
             $rs = $this->request($this->createUrl(
                 $this->getApiUrl($method, $format == 'array' ? 'json' : $format), $parameters));
         }
+        
+        if(curl_getinfo($this->ch, CURLINFO_HTTP_CODE) != 200)
+        {
+            throw new VKException("Request Error ".curl_getinfo($this->ch, CURLINFO_HTTP_CODE));
+        }
+		
         return $format == 'array' ? json_decode($rs, true) : $rs;
     }
     
