@@ -60,11 +60,10 @@ class VK
      */
     public function __construct($app_id, $api_secret, $access_token = null)
     {
-        $this->app_id       = $app_id;
-        $this->api_secret   = $api_secret;
-
-        $this->setAccessToken($access_token);
-
+        $this->app_id = $app_id;
+        $this->api_secret = $api_secret;
+        if (!is_null($access_token)) { $this->setAccessToken($access_token); }
+        
         $this->ch = curl_init();
 
     }
@@ -96,15 +95,12 @@ class VK
      */
     public function setAccessToken($access_token)
     {
-        if (!is_null($this->access_token)) {
-            if (!$this->checkAccessToken()) {
-                throw new VKException('Invalid access token.');
-            } else {
-                $this->access_token = $access_token;
-                $this->auth = true;
-            }
+        $this->auth = $this->checkAccessToken();
+        if (!$this->auth) {
+            throw new VKException('Invalid access token.');
+        } else {
+            $this->access_token = $access_token;
         }
-
     }
 
     /**
