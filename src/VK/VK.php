@@ -175,7 +175,7 @@ class VK
      * @param   string $access_token
      * @return  bool
      */
-    private function checkAccessToken($access_token = null)
+    public function checkAccessToken($access_token = null)
     {
         $token = is_null($access_token) ? $this->access_token : $access_token;
         if (is_null($token)) return false;
